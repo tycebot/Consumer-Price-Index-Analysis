@@ -1,0 +1,48 @@
+---
+title: "Misleading Metrics"
+author: "Terrell Enoru"
+date: "5/12/2025"
+output: html_document
+---
+
+# Introduction
+Examining the relationship between the consumer price index
+```{r setup, include=FALSE}
+#knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Setup necessary packages
+```{r}
+#install.packages("remotes")
+#remotes::install_github("opensdmx/rsdmx")
+```
+## 2. Retrieve data from IMF api
+```{r}
+# import libraries
+
+library(rsdmx)
+
+ 
+
+# agency and id identify the dataset you are interested in
+
+flowref <- 'IMF.STA,CPI'
+
+ 
+
+# filter identifies the subset of the dataset you want.
+
+filter <- 'USA...IX.M'
+
+ 
+
+dataset <- as.data.frame(readSDMX(providerId = 'IMF_DATA',
+
+                                  resource = 'data',
+
+                                  flowRef = flowref,
+
+                                  key = filter))
+```
+
+
