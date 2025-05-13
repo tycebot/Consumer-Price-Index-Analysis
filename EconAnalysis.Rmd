@@ -44,5 +44,14 @@ dataset <- as.data.frame(readSDMX(providerId = 'IMF_DATA',
 
                                   key = filter))
 ```
+## 3. Initital Graph
+```{r}
+# Convert to proper Year-Month format
+dataset$TIME_PERIOD <- as.Date(paste0(gsub("-M", "-", dataset$TIME_PERIOD), "-01"), format="%Y-%m-%d")
 
+# Extract only Month-Year as character format
+dataset$month_year <- format(dataset$TIME_PERIOD, "%Y-%m")
+print(dataset)
+
+```
 
