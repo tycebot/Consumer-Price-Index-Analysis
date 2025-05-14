@@ -1,12 +1,12 @@
 ---
-title: "Misleading Metrics"
+title: "Battle of the Giantss"
 author: "Terrell Enoru"
 date: "5/12/2025"
 output: html_document
 ---
 
 # Introduction
-Examining the relationship between the consumer price index
+Examining the performance of a few notable economies over the past half century
 ```{r setup, include=FALSE}
 #knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -15,12 +15,16 @@ Examining the relationship between the consumer price index
 ```{r}
 #install.packages("remotes")
 #remotes::install_github("opensdmx/rsdmx")
+library(rsdmx)
+library(ggplot2)
+library(dplyr)
+
 ```
+
 ## 2. Retrieve data from IMF api
 ```{r}
 # import libraries
 
-library(rsdmx)
 
  
 
@@ -44,7 +48,21 @@ dataset <- as.data.frame(readSDMX(providerId = 'IMF_DATA',
 
                                   key = filter))
 ```
-## 3. Initital Graph
+
+
+## 3. Filter to total market cpi
+```{r}
+dataset <- dataset %>% filter(COICOP_1999=="_T")
+```
+
+## 4. Dropping unnecessary metadata
+```{r}
+dataset <- dataset %>% select(-IFS_FLAG,-METHODOLOGY,-DERIVATION_TYPE,
+                              -SECURITY_CLASSIFICATION,-ACCESS_SHARING_LEVEL,
+                              -SCALE,-OVERLAP)
+```
+
+## 5. Clean Dates
 ```{r}
 # Convert to proper Year-Month format
 dataset$TIME_PERIOD <- as.Date(paste0(gsub("-M", "-", dataset$TIME_PERIOD), "-01"), format="%Y-%m-%d")
@@ -53,5 +71,15 @@ dataset$TIME_PERIOD <- as.Date(paste0(gsub("-M", "-", dataset$TIME_PERIOD), "-01
 dataset$month_year <- format(dataset$TIME_PERIOD, "%Y-%m")
 print(dataset)
 
+```
+```{r}
+
+str(dataset$TIME_PERIOD)
+```
+## 6. Initial Graphs
+```{r}
+ggplot(dataset, aes(x = month_year, y = OBS_VALUE, group = 1)) +
+  geom_line() +
+  labs(title="Consumer Price Index Over Time", x="Month-Year", y="CPI Value")
 ```
 
